@@ -1,20 +1,20 @@
-const { app, BrowserWindow, Menu } = require("electron");
-const log = require("electron-log");
+const { app, BrowserWindow, Menu } = require('electron');
+const log = require('electron-log');
 
 // Set env
-process.env.NODE_ENV = "development";
+process.env.NODE_ENV = 'development';
 
-const isDev = process.env.NODE_ENV !== "production" ? true : false;
-const isMac = process.platform === "darwin" ? true : false;
+const isDev = process.env.NODE_ENV !== 'production';
+const isMac = process.platform === 'darwin';
 
 let mainWindow;
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
-    title: "APP NAME",
+    title: 'APP NAME',
     width: isDev ? 800 : 355,
     height: 500,
-    icon: "./assets/icons/icon.png",
+    icon: './assets/icons/icon.png',
     resizable: isDev ? true : false,
     webPreferences: {
       nodeIntegration: true,
@@ -25,10 +25,10 @@ function createMainWindow() {
     mainWindow.webContents.openDevTools();
   }
 
-  mainWindow.loadFile("./app/index.html");
+  mainWindow.loadFile('./app/index.html');
 }
 
-app.on("ready", () => {
+app.on('ready', () => {
   createMainWindow();
 
   const mainMenu = Menu.buildFromTemplate(menu);
@@ -36,32 +36,32 @@ app.on("ready", () => {
 });
 
 const menu = [
-  ...(isMac ? [{ role: "appMenu" }] : []),
+  ...(isMac ? [{ role: 'appMenu' }] : []),
   {
-    role: "fileMenu",
+    role: 'fileMenu',
   },
   ...(isDev
     ? [
         {
-          label: "Developer",
+          label: 'Developer',
           submenu: [
-            { role: "reload" },
-            { role: "forcereload" },
-            { type: "separator" },
-            { role: "toggledevtools" },
+            { role: 'reload' },
+            { role: 'forcereload' },
+            { type: 'separator' },
+            { role: 'toggledevtools' },
           ],
         },
       ]
     : []),
 ];
 
-app.on("window-all-closed", () => {
+app.on('window-all-closed', () => {
   if (!isMac) {
     app.quit();
   }
 });
 
-app.on("activate", () => {
+app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createMainWindow();
   }
