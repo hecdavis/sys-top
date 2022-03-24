@@ -1,14 +1,16 @@
-const { app, BrowserWindow, Menu, ipcMain } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, Tray } = require('electron');
 const log = require('electron-log');
+const path = require('path');
 const Store = require('./Store');
 
 // Set env
-process.env.NODE_ENV = 'development';
+process.env.NODE_ENV = process.env.NODE_ENV ?? 'production';
 
 const isDev = process.env.NODE_ENV !== 'production';
 const isMac = process.platform === 'darwin';
 
 let mainWindow;
+let tray;
 
 // Init store & defaults
 const store = new Store({
@@ -23,11 +25,13 @@ const store = new Store({
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
-    title: 'APP NAME',
+    title: 'SysTop',
     width: isDev ? 800 : 355,
     height: 500,
     icon: './assets/icons/icon.png',
     resizable: isDev ? true : false,
+    show: false,
+    opacity: 0.9,
     webPreferences: {
       nodeIntegration: true,
     },
@@ -49,6 +53,16 @@ app.on('ready', () => {
 
   const mainMenu = Menu.buildFromTemplate(menu);
   Menu.setApplicationMenu(mainMenu);
+
+  const icon = path.join(__dirname, 'assets', 'icons', 'tray_icon.png');
+  tray = new Tray(icon);
+  tray.on('click', () => {
+    if (mainWindow.isVisible() === true) {
+      mainWindow.hide();
+    } else {
+      mainWindow.show();
+    }
+  });
 });
 
 const menu = [
