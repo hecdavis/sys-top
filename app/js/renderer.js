@@ -1,5 +1,6 @@
 const { ipcRenderer } = require('electron');
 const settingsForm = document.getElementById('settings-form');
+const nav = document.getElementById('nav');
 
 // Get settings
 ipcRenderer.on('settings:get', (e, settings) => {
@@ -29,4 +30,9 @@ settingsForm.addEventListener('submit', (e) => {
     alert.innerText = msg;
     setTimeout(() => alert.classList.add('hide'), 3000);
   }
+});
+
+// Toggle nav
+ipcRenderer.on('nav:toggle', () => {
+  nav.classList.toggle('hide');
 });
